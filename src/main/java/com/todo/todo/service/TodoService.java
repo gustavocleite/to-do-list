@@ -3,13 +3,12 @@ package com.todo.todo.service;
 import com.todo.todo.entity.Todo;
 import com.todo.todo.repository.RequestTodo;
 import com.todo.todo.repository.TodoRepository;
-import jakarta.persistence.Entity;
-import org.springframework.data.domain.Sort;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
+import java.util.Optional;
+
 
 @Service
 public class TodoService {
@@ -29,5 +28,19 @@ public class TodoService {
     public ResponseEntity listTodo(){
         var allTodo = todoRepository.findAll();
         return ResponseEntity.ok(allTodo);
+    }
+
+    public ResponseEntity updateTodo(RequestTodo requestTodo) {
+        Optional<Todo> optionalTodo = todoRepository.findById(requestTodo.id());
+        if( optionalTodo.isPresent()) {
+            Todo todoUpdate = optionalTodo.get();
+            todoUpdate.setNome(requestTodo.nome());
+            todoUpdate.setDescricao(requestTodo.descricao());
+            todoUpdate.setStatusTarefa(requestTodo.statusTarefa());
+            todoUpdate.setPrioridade(requestTodo.prioridade());
+            return ResponseEntity.ok(todoUpdate);
+        }else{
+            throw new EntityNotFoundException();
+        }
     }
 }
