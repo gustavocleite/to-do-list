@@ -50,7 +50,9 @@ public class TodoService {
         if (optionalTodo.isPresent()) {
             Todo todoDelet = optionalTodo.get();
             todoRepository.delete(todoDelet);
+            System.out.println("Teste");
             return ResponseEntity.ok("Tarefa excluida!");
+
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tarefa não encontrada");
         }
